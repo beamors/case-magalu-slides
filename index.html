@@ -106,6 +106,15 @@
   .line.a{background:var(--wash-2)}
   .line.b{background:var(--blue); color:#fff}
   .foot{font-size:14px; color:var(--mut); margin-top:12px; line-height:1.45}
+  .line i{display:block; font-style:normal; font-size:11.5px; font-weight:800; opacity:.65; margin-bottom:3px; letter-spacing:.04em}
+
+  .frases{display:grid; grid-template-columns:1fr 1.25fr; gap:8px 22px; margin-top:8px}
+  .frases .h{font-size:13px; font-weight:800; letter-spacing:.03em; padding-bottom:6px}
+  .frases .h.l{color:var(--mut)}
+  .frases .h.r{color:var(--blue)}
+  .frases .bad, .frases .good{font-size:13.5px; line-height:1.4; padding:9px 14px; border-radius:10px}
+  .frases .bad{background:var(--wash-2); color:var(--body)}
+  .frases .good{background:var(--blue); color:#fff}
 
   ul.plain{margin:0; padding:0; list-style:none}
   ul.plain li{position:relative; padding-left:22px; margin-bottom:14px; font-size:16.5px; line-height:1.5}
@@ -208,7 +217,7 @@
 
   <!-- 3 -->
   <section class="slide tint" data-title="Onde o processo quebra">
-    <p class="eyebrow">Diagnóstico</p>
+    <p class="eyebrow">Diagnóstico · Desafio 1</p>
     <h2>Onde o processo quebra</h2>
     <p class="lede" style="margin-bottom:24px">A falha não está no envio. Está nas duas últimas etapas do processo.</p>
     <div class="flow">
@@ -228,7 +237,7 @@
 
   <!-- 4 -->
   <section class="slide" data-title="Cinco barreiras">
-    <p class="eyebrow">Diagnóstico</p>
+    <p class="eyebrow">Diagnóstico · Desafio 2</p>
     <h2>Cinco barreiras em operação simultânea</h2>
     <div class="grid g3" style="margin:26px 0 18px">
       <div class="card" data-frag="1"><h3>Emocional</h3><p>Receio de perguntar para não parecer despreparado.</p><div class="out">Dúvida vira erro</div></div>
@@ -243,7 +252,7 @@
 
   <!-- 5 -->
   <section class="slide tint" data-title="A barreira mais grave">
-    <p class="eyebrow">Priorização</p>
+    <p class="eyebrow">Priorização · Desafio 2</p>
     <h2>A barreira emocional é a mais grave</h2>
     <div style="display:grid; grid-template-columns:1.35fr 1fr; gap:34px; align-items:start; margin-top:22px">
       <div>
@@ -264,26 +273,28 @@
 
   <!-- 6 -->
   <section class="slide" data-title="Diálogo reescrito">
-    <p class="eyebrow">Proposta</p>
+    <p class="eyebrow">Proposta · Desafios 3 e 4</p>
     <h2>A mesma conversa, com escuta</h2>
     <p class="lede" style="margin-bottom:22px">A mudança central é pequena e decisiva: substituir a atribuição de culpa por uma pergunta.</p>
     <div class="dialogo">
       <div>
         <span class="tab off">Como foi</span>
         <div class="talk">
-          <div class="line a">Precisamos melhorar os resultados do atendimento.</div>
-          <div class="line a">Isso é porque vocês não estão seguindo corretamente as orientações.</div>
-          <div class="line a">As informações foram enviadas. Vocês precisam prestar mais atenção.</div>
+          <div class="line a"><i>Gestor</i>Precisamos melhorar os resultados do atendimento.</div>
+          <div class="line a"><i>Colaborador</i>Os clientes estão reclamando principalmente do novo processo.</div>
+          <div class="line a"><i>Gestor</i>Isso é porque vocês não estão seguindo corretamente as orientações.</div>
+          <div class="line a"><i>Colaborador</i>Mas tivemos dificuldade para entender algumas mudanças.</div>
+          <div class="line a"><i>Gestor</i>As informações foram enviadas. Vocês precisam prestar mais atenção.</div>
         </div>
-        <p class="foot">A ruptura acontece na segunda fala: a conversa deixa de investigar um problema e passa a atribuir culpa.</p>
+        <p class="foot">A ruptura acontece na terceira fala: a conversa deixa de investigar um problema e passa a atribuir culpa.</p>
       </div>
       <div data-frag="1">
         <span class="tab on">Como poderia ser</span>
         <div class="talk">
-          <div class="line b">Antes de propor qualquer ajuste, preciso entender o que está acontecendo na ponta. O que vocês têm observado?</div>
-          <div class="line b">Pelo que entendi, a reclamação é sobre a etapa nova. É isso? Você me dá um exemplo recente?</div>
-          <div class="line b">Se vocês tiveram dificuldade de entender, a falha está em como comunicamos, não na atenção de vocês.</div>
-          <div class="line b">Vou trazer uma versão única por escrito até sexta. Combinamos uma conversa na próxima semana para verificar.</div>
+          <div class="line b"><i>Gestor</i>Antes de propor qualquer ajuste, preciso entender o que está acontecendo na ponta. O que vocês têm observado?</div>
+          <div class="line b"><i>Gestor</i>Pelo que entendi, a reclamação é sobre a etapa nova. É isso? Você me dá um exemplo recente?</div>
+          <div class="line b"><i>Gestor</i>Se vocês tiveram dificuldade de entender, a falha está em como comunicamos, não na atenção de vocês.</div>
+          <div class="line b"><i>Gestor</i>Vou trazer uma versão única por escrito até sexta. Combinamos uma conversa na próxima semana para verificar.</div>
         </div>
         <p class="foot">Pergunta aberta, paráfrase, reconhecimento da falha institucional, acordo com prazo e retorno agendado.</p>
       </div>
@@ -292,7 +303,7 @@
 
   <!-- 7 -->
   <section class="slide tint" data-title="Plano de melhoria">
-    <p class="eyebrow">Proposta</p>
+    <p class="eyebrow">Proposta · Desafio 5</p>
     <h2>O plano em quatro frentes</h2>
     <div class="grid g2" style="margin:26px 0 18px">
       <div class="card" data-frag="1"><h3>Mensagem única</h3><p>Documento consolidado e guia de consulta rápida no posto de trabalho, para eliminar as versões divergentes.</p></div>
@@ -336,17 +347,37 @@
   </section>
 
   <!-- 9 -->
-  <section class="slide tint" data-title="O grupo">
-    <p class="eyebrow">Quem fez</p>
-    <h2>O grupo</h2>
-    <p class="lede">Cursos de Administração e Comunicação Social · UNISAL Americana · 2026</p>
-    <div class="people">
-      <div class="person"><b>Beatriz dos Anjos Morais</b><span>R.A. 230024654</span></div>
-      <div class="person"><b>Fabio Martins Leite</b><span>R.A. 250028220</span></div>
-      <div class="person"><b>Gabriel Oliveira Luz</b><span>R.A. 250028057</span></div>
-      <div class="person"><b>Giulia Denardi</b><span>R.A. 250026809</span></div>
-      <div class="person"><b>Henrique Sartori</b><span>R.A. 260030927</span></div>
-      <div class="person"><b>Rhaissa Dos Santos</b><span>R.A. 250028717</span></div>
+  <section class="slide tint" data-title="A frase perigosa">
+    <p class="eyebrow">Aplicação · Desafio 6</p>
+    <h2>A frase perigosa</h2>
+    <p class="lede" style="margin-bottom:14px">Oito frases que bloqueiam a conversa, reescritas com fato, impacto, necessidade e acordo.</p>
+    <div class="frases">
+      <div class="h l">Frase que bloqueia</div>
+      <div class="h r">Versão assertiva</div>
+
+      <div class="bad">"Você nunca me escuta."</div>
+      <div class="good">Quando explico e o ponto não é aplicado, acho que não fui claro. Podemos revisar juntos?</div>
+
+      <div class="bad">"Já expliquei isso mil vezes."</div>
+      <div class="good">Esse ponto voltou algumas vezes, então minha explicação não funcionou. Vou tentar de outro modo.</div>
+
+      <div class="bad">"O problema é você."</div>
+      <div class="good">Preciso entender o que acontece nessa etapa. Podemos analisar onde está a falha?</div>
+
+      <div class="bad">"Faça do jeito que eu mandei."</div>
+      <div class="good">Preciso do procedimento no formato definido, porque garante o padrão. Se algo não funciona, me traga.</div>
+
+      <div class="bad">"Não tenho tempo para ficar explicando."</div>
+      <div class="good">Agora estou em um compromisso, mas a dúvida é importante. Falo com você às 15h.</div>
+
+      <div class="bad">"Se você tivesse prestado atenção, não teria errado."</div>
+      <div class="good">O procedimento não foi seguido e gerou retrabalho. O que dificultou a execução?</div>
+
+      <div class="bad">"Todo mundo consegue fazer, menos você."</div>
+      <div class="good">Percebo dificuldade nessa tarefa. Quero entender o obstáculo e ver que apoio resolve.</div>
+
+      <div class="bad">"Não quero saber do seu problema."</div>
+      <div class="good">Entendo que afeta seu trabalho. Não resolvo tudo agora, mas quero saber o que houve.</div>
     </div>
   </section>
 
