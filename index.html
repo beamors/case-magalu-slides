@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Case Magalu — Comunicar, escutar e construir vínculos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue:#0086FF;
+    --blue-deep:#0059B3;
+    --blue-ink:#003C7E;
+    --wash:#E9F3FF;
+    --wash-2:#F5F9FF;
+    --ink:#141A21;
+    --body:#3D4B59;
+    --mut:#7A8899;
+    --line:#DCE7F3;
+    --font: Nunito, "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+    --r:22px;
+    --r-sm:14px;
+    --r-pill:999px;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0; background:#08243F; font-family:var(--font); color:var(--body); overflow:hidden}
+
+  #viewport{position:fixed; inset:0; display:grid; place-items:center}
+  #stage{
+    width:1280px; height:720px; position:relative; background:#fff; border-radius:var(--r);
+    transform-origin:center center; overflow:hidden; box-shadow:0 26px 90px rgba(0,0,0,.5);
+  }
+
+  .slide{position:absolute; inset:0; padding:56px 68px; opacity:0; visibility:hidden; background:#fff}
+  .slide.on{opacity:1; visibility:visible}
+  .slide.blue{background:var(--blue); color:#fff}
+  .slide.tint{background:var(--wash-2)}
+
+  h1,h2,h3{margin:0; color:var(--ink); line-height:1.14; letter-spacing:-.015em}
+  h1{font-size:66px; font-weight:800}
+  h2{font-size:42px; font-weight:800; margin-bottom:12px}
+  h3{font-size:22px; font-weight:800}
+  .blue h1,.blue h2,.blue h3{color:#fff}
+  p{margin:0}
+
+  .eyebrow{font-size:15px; font-weight:700; color:var(--blue); margin-bottom:10px}
+  .blue .eyebrow{color:#CFE5FF}
+  .lede{font-size:19px; line-height:1.55; color:var(--body); max-width:78ch; margin-bottom:30px}
+  .blue .lede{color:#D6EAFF}
+
+  .grid{display:grid; gap:18px}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .g2{grid-template-columns:repeat(2,1fr)}
+  .card{background:var(--wash-2); border-radius:var(--r); padding:28px 26px}
+  .tint .card{background:#fff}
+  .card p{margin-top:9px; font-size:16px; line-height:1.5}
+  .card.solid{background:var(--blue); color:#fff}
+  .card.solid p{color:#D6EAFF}
+  .card .out{margin-top:12px; font-weight:800; font-size:14.5px; color:var(--blue)}
+
+  .pill{
+    display:inline-block; background:var(--wash); color:var(--blue-deep); font-weight:700;
+    font-size:14px; padding:8px 18px; border-radius:var(--r-pill);
+  }
+  .blue .pill{background:rgba(255,255,255,.18); color:#fff}
+
+  /* fluxo */
+  .flow{display:grid; grid-template-columns:repeat(6,1fr); gap:12px}
+  .step{background:var(--wash-2); border-radius:var(--r-sm); padding:20px 16px; text-align:left; border:0; font:inherit; cursor:pointer; transition:transform .15s ease}
+  .tint .step{background:#fff}
+  .step:hover{transform:translateY(-4px)}
+  .step b{display:block; font-size:14px; font-weight:800; color:var(--blue-ink); margin-bottom:8px}
+  .step span{display:block; font-size:14.5px; line-height:1.45; color:var(--body)}
+  .step.weak{background:var(--wash)}
+  .step.miss{background:var(--blue)}
+  .step.miss b{color:#fff}
+  .step.miss span{color:#D6EAFF}
+  .step[aria-pressed="true"]{box-shadow:0 0 0 3px var(--blue-ink)}
+  #detail{
+    margin-top:20px; background:#fff; border-radius:var(--r-sm); padding:20px 24px;
+    font-size:16.5px; line-height:1.55; min-height:74px;
+  }
+  .slide:not(.tint) #detail{background:var(--wash-2)}
+
+  /* cadeia */
+  .chain{display:grid; gap:12px}
+  .link{display:flex; align-items:center; gap:18px; background:var(--wash-2); border-radius:var(--r-sm); padding:18px 24px}
+  .link .n{font-weight:800; color:var(--blue); font-size:17px; min-width:16px}
+  .link .x{font-weight:800; color:var(--ink); font-size:20px}
+  .link.last{background:var(--blue)}
+  .link.last .n{color:#CFE5FF}
+  .link.last .x{color:#fff}
+
+  /* diálogo */
+  .dialogo{display:grid; grid-template-columns:1fr 1fr; gap:30px; align-items:start}
+  .tab{
+    display:inline-block; font-size:14px; font-weight:800; padding:8px 20px;
+    border-radius:var(--r-pill); margin-bottom:14px;
+  }
+  .tab.off{background:var(--wash); color:var(--blue-deep)}
+  .tab.on{background:var(--blue); color:#fff}
+  .talk{display:grid; gap:10px}
+  .line{padding:14px 18px; border-radius:var(--r-sm); font-size:15px; line-height:1.45}
+  .line.a{background:var(--wash-2)}
+  .line.b{background:var(--blue); color:#fff}
+  .foot{font-size:14px; color:var(--mut); margin-top:12px; line-height:1.45}
+
+  ul.plain{margin:0; padding:0; list-style:none}
+  ul.plain li{position:relative; padding-left:22px; margin-bottom:14px; font-size:16.5px; line-height:1.5}
+  ul.plain li::before{content:""; position:absolute; left:0; top:9px; width:8px; height:8px; background:var(--blue); border-radius:50%}
+
+  /* capa e fecho */
+  #s1{padding:0; display:grid; grid-template-columns:1.4fr 1fr}
+  #s1 .l{padding:0 68px; display:flex; flex-direction:column; justify-content:center}
+  #s1 .r{background:var(--blue-deep); padding:56px 44px; display:flex; flex-direction:column; justify-content:center; gap:16px}
+  #s1 .sub{font-size:23px; color:#D6EAFF; margin-top:18px; max-width:34ch}
+  #s1 .meta{margin-top:36px; font-size:15px; color:#CFE5FF; line-height:1.7}
+  #s1 .meta b{display:block; color:#fff; font-size:16px}
+  #s1 .roster{margin-top:26px; display:grid; grid-template-columns:1fr 1fr; gap:6px 26px; font-size:13.5px; color:#BEDCFF}
+  #s1 .r .box{background:rgba(255,255,255,.12); border-radius:var(--r-sm); padding:22px 24px}
+  #s1 .r .box b{display:block; color:#fff; margin-bottom:5px; font-size:16px}
+  #s1 .r .box span{font-size:15px; color:#CFE5FF; line-height:1.5}
+
+  .people{display:grid; grid-template-columns:repeat(3,1fr); gap:16px}
+  .person{background:#fff; border-radius:var(--r-sm); padding:22px 24px}
+  .tint .person{background:#fff}
+  .person b{display:block; color:var(--ink); font-size:17px}
+  .person span{font-size:14.5px; color:var(--mut)}
+
+  [data-frag]{opacity:0; transition:opacity .25s ease}
+  [data-frag].show{opacity:1}
+
+  /* chrome */
+  #bar{position:fixed; left:0; top:0; height:4px; background:var(--blue); width:0; transition:width .25s ease; z-index:40}
+  #hud{position:fixed; right:18px; bottom:16px; display:flex; align-items:center; gap:14px; font-size:13px; color:#8FB4D6; z-index:40}
+  #hud button{font:inherit; background:rgba(255,255,255,.1); color:#DDEBF9; border:0; width:32px; height:32px; border-radius:var(--r-pill); cursor:pointer; font-size:15px}
+  #hud button:hover{background:rgba(255,255,255,.22)}
+  #clock{font-variant-numeric:tabular-nums}
+  #clock.over{color:#7EC0FF}
+  #help{position:fixed; left:18px; bottom:16px; font-size:12px; color:#6E93B5; z-index:40}
+  #grid{position:fixed; inset:0; background:#08243F; z-index:50; padding:34px; display:none; grid-template-columns:repeat(4,1fr); gap:16px; align-content:start; overflow:auto}
+  #grid.on{display:grid}
+  .thumb{background:#0E3358; border:0; color:#CFE5FF; text-align:left; padding:18px; border-radius:var(--r-sm); cursor:pointer; font:inherit; min-height:96px}
+  .thumb:hover{background:#154474}
+  .thumb .num{font-size:11px; font-weight:800; color:#7EC0FF; letter-spacing:.08em}
+  .thumb .ttl{margin-top:8px; font-size:14.5px; line-height:1.35; color:#fff}
+  .thumb[aria-current="true"]{box-shadow:inset 0 0 0 3px var(--blue)}
+  button:focus-visible,.step:focus-visible{outline:3px solid var(--blue-ink); outline-offset:2px}
+
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+  @media print{
+    body{overflow:visible; background:#fff}
+    #hud,#help,#bar,#grid{display:none!important}
+    #viewport{position:static; display:block}
+    #stage{transform:none!important; box-shadow:none; border-radius:0; width:100%; height:auto}
+    .slide{position:relative; opacity:1!important; visibility:visible!important; height:720px; page-break-after:always}
+    [data-frag]{opacity:1!important}
+  }
+</style>
+</head>
+<body>
+
+<div id="bar"></div>
+<div id="viewport"><div id="stage">
+
+  <!-- 1 -->
+  <section class="slide blue on" id="s1" data-title="Capa">
+    <div class="l">
+      <span class="pill">Atividade Prática em Grupo · Unidade 2</span>
+      <h1 style="margin-top:22px">Comunicar, escutar e construir vínculos</h1>
+      <p class="sub">Um estudo sobre o que acontece quando a empresa envia a mensagem, mas nunca verifica se ela foi compreendida.</p>
+      <div class="meta">
+        <b>Case Magalu</b>
+        Centro Universitário Salesiano de São Paulo · Americana · 2026
+      </div>
+      <div class="roster">
+        <span>Beatriz dos Anjos Morais · 230024654</span>
+        <span>Giulia Denardi · 250026809</span>
+        <span>Fabio Martins Leite · 250028220</span>
+        <span>Henrique Sartori · 260030927</span>
+        <span>Gabriel Oliveira Luz · 250028057</span>
+        <span>Rhaissa Dos Santos · 250028717</span>
+      </div>
+    </div>
+    <div class="r">
+      <div class="box"><b>Cenário hipotético</b><span>Construído para fins acadêmicos a partir de elementos organizacionais genéricos.</span></div>
+      <div class="box"><b>Entregas</b><span>Diagnóstico do processo comunicacional, diálogo reescrito e plano de melhoria.</span></div>
+    </div>
+  </section>
+
+  <!-- 2 -->
+  <section class="slide" data-title="O caso">
+    <p class="eyebrow">O caso</p>
+    <h2>Enviar não é comunicar</h2>
+    <p class="lede">Uma nova estratégia de atendimento entra em operação. A direção considera a comunicação concluída porque os comunicados foram enviados. Na ponta, três coisas acontecem ao mesmo tempo.</p>
+    <div class="grid g3" style="margin-bottom:24px">
+      <div class="card" data-frag="1"><h3>Compreensão parcial</h3><p>Parte dos colaboradores afirma não ter entendido completamente o que mudou.</p></div>
+      <div class="card" data-frag="2"><h3>Versões divergentes</h3><p>Gestores diferentes repassaram orientações diferentes sobre a mesma mudança.</p></div>
+      <div class="card" data-frag="3"><h3>Silêncio por receio</h3><p>Colaboradores evitam perguntar para não serem vistos como despreparados.</p></div>
+    </div>
+    <div class="card solid" data-frag="4" style="padding:28px 30px">
+      <p style="font-size:15px; color:#CFE5FF; font-weight:700">Pergunta que orienta o trabalho</p>
+      <p style="font-size:24px; color:#fff; line-height:1.35; margin-top:8px">Como usar comunicação assertiva, escuta ativa e empatia para garantir que uma mudança organizacional seja efetivamente compreendida?</p>
+    </div>
+  </section>
+
+  <!-- 3 -->
+  <section class="slide tint" data-title="Onde o processo quebra">
+    <p class="eyebrow">Diagnóstico</p>
+    <h2>Onde o processo quebra</h2>
+    <p class="lede" style="margin-bottom:24px">A falha não está no envio. Está nas duas últimas etapas do processo.</p>
+    <div class="flow">
+      <button class="step" aria-pressed="false" data-d="A direção definiu a nova estratégia e os gestores de área atuam como emissores secundários ao repassar a informação às equipes."><b>Emissor</b><span>Direção e gestores de área</span></button>
+      <button class="step" aria-pressed="false" data-d="O que muda no atendimento, por que muda e o que se espera de cada colaborador."><b>Mensagem</b><span>O que muda no atendimento</span></button>
+      <button class="step" aria-pressed="false" data-d="Comunicado institucional somado ao repasse verbal nas reuniões. A cada elo da cascata, a mensagem se altera."><b>Canal</b><span>Comunicado e repasse em cascata</span></button>
+      <button class="step" aria-pressed="false" data-d="As equipes de atendimento, responsáveis por executar o processo na ponta."><b>Receptor</b><span>Equipes de atendimento</span></button>
+      <button class="step weak" aria-pressed="false" data-d="Parte compreendeu apenas em parte e equipes diferentes entenderam versões distintas da mesma mudança."><b>Decodificação</b><span>Interpretações divergentes</span></button>
+      <button class="step miss" aria-pressed="false" data-d="A direção presume compreensão porque enviou a mensagem. Sem retorno, o erro permanece invisível para quem decide."><b>Feedback</b><span>Não existe</span></button>
+    </div>
+    <div id="detail">Clique em uma etapa para detalhar. Ruídos ao longo de todo o processo: repasse em cascata, receio de perguntar, excesso de comunicados, ambiguidade dos termos e falta de atenção.</div>
+    <div class="card" data-frag="1" style="margin-top:20px; padding:24px 28px">
+      <h3 style="font-size:18px">Comunicação eficaz tem três partes, não uma</h3>
+      <p style="font-size:21px; font-weight:800; color:var(--blue-ink); margin-top:8px">mensagem transmitida + mensagem compreendida + possibilidade de resposta</p>
+    </div>
+  </section>
+
+  <!-- 4 -->
+  <section class="slide" data-title="Cinco barreiras">
+    <p class="eyebrow">Diagnóstico</p>
+    <h2>Cinco barreiras em operação simultânea</h2>
+    <div class="grid g3" style="margin:26px 0 18px">
+      <div class="card" data-frag="1"><h3>Emocional</h3><p>Receio de perguntar para não parecer despreparado.</p><div class="out">Dúvida vira erro</div></div>
+      <div class="card" data-frag="2"><h3>Perceptiva</h3><p>Gestor vê desatenção; equipe vê falta de clareza.</p><div class="out">Culpabilização mútua</div></div>
+      <div class="card" data-frag="3"><h3>Semântica</h3><p>Cada gestor explicou a mudança de um modo.</p><div class="out">Padrões divergentes</div></div>
+    </div>
+    <div class="grid g2">
+      <div class="card" data-frag="4"><h3>Excesso de informação</h3><p>A mudança se dilui no fluxo diário de comunicados.</p><div class="out">Perde prioridade</div></div>
+      <div class="card" data-frag="5"><h3>Falta de atenção</h3><p>A mensagem chega durante o atendimento ao cliente.</p><div class="out">Leitura parcial</div></div>
+    </div>
+  </section>
+
+  <!-- 5 -->
+  <section class="slide tint" data-title="A barreira mais grave">
+    <p class="eyebrow">Priorização</p>
+    <h2>A barreira emocional é a mais grave</h2>
+    <div style="display:grid; grid-template-columns:1.35fr 1fr; gap:34px; align-items:start; margin-top:22px">
+      <div>
+        <p class="lede" style="margin-bottom:22px">As outras quatro barreiras seriam resolvidas por uma pergunta. É exatamente a pergunta que o medo elimina.</p>
+        <div class="chain">
+          <div class="link" data-frag="1"><span class="n">1</span><span class="x">Receio de perguntar</span></div>
+          <div class="link" data-frag="2"><span class="n">2</span><span class="x">Dúvida não verbalizada</span></div>
+          <div class="link" data-frag="3"><span class="n">3</span><span class="x">Execução equivocada</span></div>
+          <div class="link last" data-frag="4"><span class="n">4</span><span class="x">Ruído vira problema estrutural</span></div>
+        </div>
+      </div>
+      <div class="card solid" style="padding:34px 30px">
+        <h3 style="font-size:30px; line-height:1.2">Sem pergunta, não há feedback.</h3>
+        <p style="font-size:16px; margin-top:16px">Sem feedback, a liderança não descobre em que ponto a mensagem falhou. O ruído deixa de ser pontual e passa a se repetir a cada nova comunicação.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 -->
+  <section class="slide" data-title="Diálogo reescrito">
+    <p class="eyebrow">Proposta</p>
+    <h2>A mesma conversa, com escuta</h2>
+    <p class="lede" style="margin-bottom:22px">A mudança central é pequena e decisiva: substituir a atribuição de culpa por uma pergunta.</p>
+    <div class="dialogo">
+      <div>
+        <span class="tab off">Como foi</span>
+        <div class="talk">
+          <div class="line a">Precisamos melhorar os resultados do atendimento.</div>
+          <div class="line a">Isso é porque vocês não estão seguindo corretamente as orientações.</div>
+          <div class="line a">As informações foram enviadas. Vocês precisam prestar mais atenção.</div>
+        </div>
+        <p class="foot">A ruptura acontece na segunda fala: a conversa deixa de investigar um problema e passa a atribuir culpa.</p>
+      </div>
+      <div data-frag="1">
+        <span class="tab on">Como poderia ser</span>
+        <div class="talk">
+          <div class="line b">Antes de propor qualquer ajuste, preciso entender o que está acontecendo na ponta. O que vocês têm observado?</div>
+          <div class="line b">Pelo que entendi, a reclamação é sobre a etapa nova. É isso? Você me dá um exemplo recente?</div>
+          <div class="line b">Se vocês tiveram dificuldade de entender, a falha está em como comunicamos, não na atenção de vocês.</div>
+          <div class="line b">Vou trazer uma versão única por escrito até sexta. Combinamos uma conversa na próxima semana para verificar.</div>
+        </div>
+        <p class="foot">Pergunta aberta, paráfrase, reconhecimento da falha institucional, acordo com prazo e retorno agendado.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 -->
+  <section class="slide tint" data-title="Plano de melhoria">
+    <p class="eyebrow">Proposta</p>
+    <h2>O plano em quatro frentes</h2>
+    <div class="grid g2" style="margin:26px 0 18px">
+      <div class="card" data-frag="1"><h3>Mensagem única</h3><p>Documento consolidado e guia de consulta rápida no posto de trabalho, para eliminar as versões divergentes.</p></div>
+      <div class="card" data-frag="2"><h3>Escuta permanente</h3><p>Rodadas quinzenais por equipe com pauta aberta e canal de dúvidas com prazo definido de resposta.</p></div>
+      <div class="card" data-frag="3"><h3>Feedback verificado</h3><p>Substituir "ficou claro?" pelo pedido de que o colaborador explique como vai executar a mudança.</p></div>
+      <div class="card" data-frag="4"><h3>Liderança assertiva</h3><p>Estrutura fato, impacto, necessidade e acordo em toda comunicação de mudança e em todo feedback.</p></div>
+    </div>
+    <div class="card solid" data-frag="5" style="padding:24px 28px">
+      <p style="font-size:15px; color:#CFE5FF; font-weight:700">Como medir</p>
+      <p style="font-size:17.5px; color:#fff; margin-top:8px">Taxa de acerto na aplicação do processo · reincidência de dúvidas no canal aberto · reclamações de clientes ligadas ao processo · percepção de abertura da liderança no clima</p>
+    </div>
+  </section>
+
+  <!-- 8 -->
+  <section class="slide" data-title="O custo de não verificar">
+    <p class="eyebrow">Por que isso importa</p>
+    <h2>O custo de não verificar</h2>
+    <div class="grid g2" style="margin-top:28px">
+      <div>
+        <h3 style="color:var(--blue); font-size:17px; margin-bottom:16px">Para a gestão</h3>
+        <ul class="plain">
+          <li>Retrabalho e horas de liderança gastas em correção.</li>
+          <li>Perda de credibilidade e do acesso à informação da ponta.</li>
+          <li>Conflito entre áreas: o vazio de informação vira suposição.</li>
+          <li>Rotatividade em ambiente onde não se pode perguntar.</li>
+        </ul>
+      </div>
+      <div>
+        <h3 style="color:var(--blue); font-size:17px; margin-bottom:16px">Para os públicos</h3>
+        <ul class="plain">
+          <li>O cliente recebe respostas diferentes conforme quem o atende.</li>
+          <li>A inconsistência interna vira desorganização visível da marca.</li>
+          <li>O não verbal do gestor pode anular a mensagem verbal de abertura.</li>
+          <li>Vínculo se constrói na consistência entre discurso e prática.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card" data-frag="1" style="margin-top:20px; padding:22px 28px">
+      <p style="font-size:19px; color:var(--blue-ink); font-weight:800">Uma cultura que se apresenta centrada nas pessoas precisa se confirmar na conversa cotidiana entre gestor e colaborador.</p>
+    </div>
+  </section>
+
+  <!-- 9 -->
+  <section class="slide tint" data-title="O grupo">
+    <p class="eyebrow">Quem fez</p>
+    <h2>O grupo</h2>
+    <p class="lede">Cursos de Administração e Comunicação Social · UNISAL Americana · 2026</p>
+    <div class="people">
+      <div class="person"><b>Beatriz dos Anjos Morais</b><span>R.A. 230024654</span></div>
+      <div class="person"><b>Fabio Martins Leite</b><span>R.A. 250028220</span></div>
+      <div class="person"><b>Gabriel Oliveira Luz</b><span>R.A. 250028057</span></div>
+      <div class="person"><b>Giulia Denardi</b><span>R.A. 250026809</span></div>
+      <div class="person"><b>Henrique Sartori</b><span>R.A. 260030927</span></div>
+      <div class="person"><b>Rhaissa Dos Santos</b><span>R.A. 250028717</span></div>
+    </div>
+  </section>
+
+  <!-- 10 -->
+  <section class="slide blue" data-title="Conclusão">
+    <p class="eyebrow">Conclusão</p>
+    <h2 style="font-size:52px; margin-bottom:34px">O problema não foi transmitir. Foi não verificar.</h2>
+    <div class="grid g3" style="margin-bottom:32px">
+      <div class="card" data-frag="1" style="background:rgba(255,255,255,.14)"><h3>Padronizar</h3><p>uma única versão da mensagem</p></div>
+      <div class="card" data-frag="2" style="background:rgba(255,255,255,.14)"><h3>Verificar</h3><p>confirmação ativa de entendimento</p></div>
+      <div class="card" data-frag="3" style="background:rgba(255,255,255,.14)"><h3>Reposicionar</h3><p>perguntar deixa de ser sinal de despreparo</p></div>
+    </div>
+    <p style="font-size:19px; color:#D6EAFF; margin-bottom:44px">A comunicação adequada não elimina o conflito. Reduz o mal-entendido e torna a negociação possível.</p>
+    <p style="font-size:38px; font-weight:800; color:#fff">Obrigado</p>
+  </section>
+
+</div></div>
+
+<div id="grid" role="dialog" aria-label="Todos os slides"></div>
+<div id="help">← → navega · O visão geral · T cronômetro · F tela cheia</div>
+<div id="hud">
+  <span id="clock">08:00</span>
+  <span id="count">1 / 10</span>
+  <button id="prev" aria-label="Slide anterior">‹</button>
+  <button id="next" aria-label="Próximo slide">›</button>
+  <button id="full" aria-label="Tela cheia">⛶</button>
+</div>
+
+<script>
+(function(){
+  var stage=document.getElementById('stage');
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var i=0, step=0;
+
+  function frags(n){
+    return [].slice.call(slides[n].querySelectorAll('[data-frag]'))
+      .sort(function(a,b){return (+a.dataset.frag)-(+b.dataset.frag);});
+  }
+  function paint(){
+    slides.forEach(function(s,n){s.classList.toggle('on',n===i);});
+    frags(i).forEach(function(el,k){el.classList.toggle('show',k<step);});
+    document.getElementById('count').textContent=(i+1)+' / '+slides.length;
+    document.getElementById('bar').style.width=(i/(slides.length-1)*100)+'%';
+    if(grid.classList.contains('on')) markThumbs();
+  }
+  function next(){var f=frags(i); if(step<f.length){step++;paint();return;} if(i<slides.length-1){i++;step=0;paint();}}
+  function prev(){if(step>0){step--;paint();return;} if(i>0){i--;step=frags(i).length;paint();}}
+  function go(n){i=n; step=frags(i).length; paint();}
+
+  function fit(){
+    var s=Math.min(window.innerWidth/1280, window.innerHeight/720);
+    stage.style.transform='scale('+s+')';
+  }
+  window.addEventListener('resize',fit);
+
+  var grid=document.getElementById('grid');
+  slides.forEach(function(s,n){
+    var b=document.createElement('button');
+    b.className='thumb';
+    b.innerHTML='<span class="num">'+String(n+1).padStart(2,'0')+'</span><span class="ttl">'+s.dataset.title+'</span>';
+    b.onclick=function(){go(n); grid.classList.remove('on');};
+    grid.appendChild(b);
+  });
+  function markThumbs(){
+    [].forEach.call(grid.children,function(c,n){c.setAttribute('aria-current',n===i?'true':'false');});
+  }
+  function toggleGrid(){grid.classList.toggle('on'); markThumbs();}
+  function toggleFull(){
+    if(!document.fullscreenElement){document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen();}
+    else{document.exitFullscreen&&document.exitFullscreen();}
+  }
+
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){e.preventDefault();next();}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();prev();}
+    else if(e.key==='Home'){go(0);}
+    else if(e.key==='End'){go(slides.length-1);}
+    else if(e.key==='o'||e.key==='O'){toggleGrid();}
+    else if(e.key==='Escape'){grid.classList.remove('on');}
+    else if(e.key==='f'||e.key==='F'){toggleFull();}
+    else if(e.key==='t'||e.key==='T'){toggleClock();}
+  });
+  document.getElementById('next').onclick=next;
+  document.getElementById('prev').onclick=prev;
+  document.getElementById('full').onclick=toggleFull;
+
+  var detail=document.getElementById('detail'), base=detail.textContent;
+  document.querySelectorAll('.step').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var on=btn.getAttribute('aria-pressed')==='true';
+      document.querySelectorAll('.step').forEach(function(b){b.setAttribute('aria-pressed','false');});
+      if(on){detail.textContent=base; return;}
+      btn.setAttribute('aria-pressed','true');
+      detail.textContent=btn.dataset.d;
+    });
+  });
+
+  var left=8*60, timer=null, clock=document.getElementById('clock');
+  function render(){
+    var m=Math.floor(Math.abs(left)/60), s=Math.abs(left)%60;
+    clock.textContent=(left<0?'-':'')+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+    clock.classList.toggle('over',left<=60);
+  }
+  function toggleClock(){
+    if(timer){clearInterval(timer); timer=null; return;}
+    timer=setInterval(function(){left--; render();},1000);
+  }
+
+  fit(); paint(); render();
+})();
+</script>
+</body>
+</html>
